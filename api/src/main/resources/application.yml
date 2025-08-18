@@ -1,0 +1,35 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        secure: false        # sett til false lokalt hvis du ikke kjører https
+        http-only: false
+        same-site: Lax       # None krever alltid https
+
+spring:
+  application:
+    name: example-oauth2
+  docker:
+    compose:
+      enabled: false
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: demo-client
+            client-secret: mysecret
+            scope: openid,profile,email
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8081/realms/demo
+            user-name-attribute: preferred_username
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.web: INFO
